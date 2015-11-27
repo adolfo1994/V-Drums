@@ -11,21 +11,28 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
     private float timer, kickTimer;
     private GameObject button, metronome;
     private int counter, kickCounter, superCounter;
-    private bool metronomeActive = true;
+    private bool metronomeActive;
+    private bool playing, kickActive;
 
     void Start () {
         GetComponent<VirtualButtonBehaviour>().RegisterEventHandler(this);
         counter = 3;
         metronome = transform.Find("Metronome").gameObject;
         button = transform.Find("Button").gameObject;
+
         song.PlayDelayed(songTimer);
         timer = songTimer + .26f;
         kickTimer = songTimer * 100; //enough
         kickCounter = 0;
         superCounter = 0;
+        metronomeActive = true;
+        playing = true;
+        kickActive = true;
 	}
 
 	void FixedUpdate () {
+        if (!playing)
+            return;
         timer -= Time.fixedDeltaTime;
         if (timer <= 0)
         {
@@ -42,7 +49,8 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         kickTimer -= Time.fixedDeltaTime;
         if (kickTimer <= 0)
         {
-            kick.Play();
+            if (kickActive)
+                kick.Play();
             switch (kickCounter)
             {
                 case 0:
@@ -61,10 +69,24 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         metronomeActive = !metronomeActive;
         metronome.SetActive(metronomeActive);
         button.GetComponent<Renderer>().material.SetColor("_Color",
-            metronomeActive ? new Color(.23f, .7f, .11f) : new Color(.6f, .7f, .6f));
+            metronomeActive ? new Color(.23f, .7f, .11f) : new Color(.5f, .7f, .5f));
     }
 
     public void OnButtonReleased(VirtualButtonAbstractBehaviour vb)
     {
+    }
+
+    public void TogglePlay()
+    {
+        playing = !playing;
+        if (playing)
+            song.UnPause();
+        else
+            song.Pause();
+    }
+
+    public void ToogleKick()
+    {
+        kickActive = !kickActive;
     }
 }
