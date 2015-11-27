@@ -8,9 +8,9 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
     public GameObject[] lights;
     public AudioSource song, kick;
 
-    private float timer;
+    private float timer, kickTimer;
     private GameObject button, metronome;
-    private int counter;
+    private int counter, kickCounter, superCounter;
     private bool metronomeActive = true;
 
     void Start () {
@@ -19,7 +19,10 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         metronome = transform.Find("Metronome").gameObject;
         button = transform.Find("Button").gameObject;
         song.PlayDelayed(songTimer);
-        timer = songTimer - frequency * 8 + .26f;
+        timer = songTimer + .26f;
+        kickTimer = songTimer * 100; //enough
+        kickCounter = 0;
+        superCounter = 0;
 	}
 
 	void FixedUpdate () {
@@ -27,13 +30,29 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         if (timer <= 0)
         {
             lights[counter++].SetActive(false);
-            if (counter % 4 == 0)
+            if ((counter & 3) == 0)
             {
+                if (++superCounter > 8)
+                    kickTimer = Time.fixedDeltaTime;
                 counter = 0;
-                kick.Play();
             }
             lights[counter].SetActive(true);
             timer += frequency;
+        }
+        kickTimer -= Time.fixedDeltaTime;
+        if (kickTimer <= 0)
+        {
+            kick.Play();
+            switch (kickCounter)
+            {
+                case 0:
+                case 2: kickTimer += frequency * .475f; break;
+                case 1: kickTimer += frequency * .9f; break;
+                case 3: kickTimer += frequency * 1.17f; break;
+                case 4: kickTimer += frequency; break;
+            }
+            if (++kickCounter == 5)
+                kickCounter = 0;
         }
 	}
 
@@ -42,7 +61,7 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         metronomeActive = !metronomeActive;
         metronome.SetActive(metronomeActive);
         button.GetComponent<Renderer>().material.SetColor("_Color",
-            metronomeActive ? new Color(.23f, .7f, .11f) : new Color(.8f, 0, 0));
+            metronomeActive ? new Color(.23f, .7f, .11f) : new Color(.6f, .7f, .6f));
     }
 
     public void OnButtonReleased(VirtualButtonAbstractBehaviour vb)
