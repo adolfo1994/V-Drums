@@ -7,22 +7,24 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
     public float frequency, songTimer;
     public GameObject[] lights;
     public AudioSource song, kick;
+    public int quarters;
 
-    private float timer, kickTimer;
+    private float timer, kickTimer, delay;
     private GameObject button, metronome;
     private int counter, kickCounter, superCounter;
     private bool metronomeActive;
     private bool playing, kickActive;
 
     void Start () {
+        delay = .26f;
         GetComponent<VirtualButtonBehaviour>().RegisterEventHandler(this);
         counter = 3;
         metronome = transform.Find("Metronome").gameObject;
         button = transform.Find("Button").gameObject;
 
         song.PlayDelayed(songTimer);
-        timer = songTimer + .26f;
-        kickTimer = songTimer * 100; //enough
+        timer = songTimer + delay;
+        kickTimer = frequency * 36; //enough
         kickCounter = 0;
         superCounter = 0;
         metronomeActive = true;
@@ -88,5 +90,19 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
     public void ToogleKick()
     {
         kickActive = !kickActive;
+    }
+
+    public void SetStart(int point)
+    {
+        song.time = frequency * point * 4 * quarters;
+        timer = delay;
+        counter = 3;
+        kickTimer = delay;
+        kickCounter = 0;
+        if (point == 0)
+        {
+            kickTimer = frequency * 36; //enough
+            superCounter = 0;
+        }
     }
 }
