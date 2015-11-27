@@ -4,10 +4,11 @@ using Vuforia;
 
 public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
 
-    public float frequency, timer, songTimer;
+    public float frequency, songTimer;
     public GameObject[] lights;
-    public AudioSource song;
+    public AudioSource song, kick;
 
+    private float timer;
     private GameObject button, metronome;
     private int counter;
     private bool metronomeActive = true;
@@ -18,6 +19,7 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         metronome = transform.Find("Metronome").gameObject;
         button = transform.Find("Button").gameObject;
         song.PlayDelayed(songTimer);
+        timer = songTimer - frequency * 8 + .26f;
 	}
 
 	void FixedUpdate () {
@@ -25,8 +27,11 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         if (timer <= 0)
         {
             lights[counter++].SetActive(false);
-            if (counter == 4)
+            if (counter % 4 == 0)
+            {
                 counter = 0;
+                kick.Play();
+            }
             lights[counter].SetActive(true);
             timer += frequency;
         }
