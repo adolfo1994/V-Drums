@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
+    <ImageTarget name="control" size="2.000000 0.788571" />
     <ImageTarget name="crash" size="1.000000 1.014620" />
     <ImageTarget name="ftom" size="1.000000 1.014620" />
     <ImageTarget name="hihat" size="1.000000 1.014620" />
