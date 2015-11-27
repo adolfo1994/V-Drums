@@ -10,15 +10,14 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
 
     private GameObject button, metronome;
     private int counter;
-    private bool songStarted;
     private bool metronomeActive = true;
 
     void Start () {
         GetComponent<VirtualButtonBehaviour>().RegisterEventHandler(this);
         counter = 3;
-        songStarted = false;
         metronome = transform.Find("Metronome").gameObject;
         button = transform.Find("Button").gameObject;
+        song.PlayDelayed(songTimer);
 	}
 
 	void FixedUpdate () {
@@ -31,20 +30,14 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
             lights[counter].SetActive(true);
             timer += frequency;
         }
-
-        songTimer -= Time.fixedDeltaTime;
-        if (songTimer <= 0 && !songStarted)
-        {
-            song.Play();
-            songStarted = true;
-        }
 	}
 
     public void OnButtonPressed(VirtualButtonAbstractBehaviour vb)
     {
         metronomeActive = !metronomeActive;
         metronome.SetActive(metronomeActive);
-        button.GetComponent<Renderer>().material.SetColor("_Color", metronomeActive ? Color.green : Color.red);
+        button.GetComponent<Renderer>().material.SetColor("_Color",
+            metronomeActive ? new Color(.23f, .7f, .11f) : new Color(.8f, 0, 0));
     }
 
     public void OnButtonReleased(VirtualButtonAbstractBehaviour vb)
