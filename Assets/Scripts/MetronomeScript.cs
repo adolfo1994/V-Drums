@@ -4,10 +4,11 @@ using Vuforia;
 
 public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
 
-    public float frequency, songTimer;
+    public float frequency, songTimer, dialSpeed;
     public GameObject[] lights;
     public AudioSource song, kick;
     public int quarters;
+    public GameObject dial;
 
     private float timer, kickTimer, delay;
     private GameObject button, metronome;
@@ -15,7 +16,7 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
     private bool metronomeActive;
     private bool playing, kickActive;
 
-    void Start () {
+    void Start() {
         delay = .26f;
         GetComponent<VirtualButtonBehaviour>().RegisterEventHandler(this);
         counter = 3;
@@ -24,15 +25,15 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
 
         song.PlayDelayed(songTimer);
         timer = songTimer + delay;
-        kickTimer = frequency * 36; //enough
+        kickTimer = frequency * 40; //enough
         kickCounter = 0;
         superCounter = 0;
         metronomeActive = true;
         playing = true;
         kickActive = true;
-	}
+    }
 
-	void FixedUpdate () {
+    void FixedUpdate() {
         if (!playing)
             return;
         timer -= Time.fixedDeltaTime;
@@ -42,7 +43,10 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
             if ((counter & 3) == 0)
             {
                 if (++superCounter > 8)
+                {
                     kickTimer = Time.fixedDeltaTime;
+                    kickCounter = 0;
+                }
                 counter = 0;
             }
             lights[counter].SetActive(true);
@@ -61,10 +65,14 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
                 case 3: kickTimer += frequency * 1.17f; break;
                 case 4: kickTimer += frequency; break;
             }
-            if (++kickCounter == 5)
-                kickCounter = 0;
+            ++kickCounter;
         }
-	}
+    }
+
+    void Update()
+    {
+        dial.transform.localPosition = new Vector3(-.315f + song.time * dialSpeed,  0, -.129f);
+    }
 
     public void OnButtonPressed(VirtualButtonAbstractBehaviour vb)
     {
@@ -99,9 +107,10 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         counter = 3;
         kickTimer = delay;
         kickCounter = 0;
+        superCounter = 9;
         if (point == 0)
         {
-            kickTimer = frequency * 36; //enough
+            kickTimer = frequency * 40; //enough
             superCounter = 0;
         }
     }
