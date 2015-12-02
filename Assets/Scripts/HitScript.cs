@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Vuforia;
 
 public class HitScript : MonoBehaviour, IVirtualButtonEventHandler {
@@ -20,7 +19,6 @@ public class HitScript : MonoBehaviour, IVirtualButtonEventHandler {
 
     public void OnButtonPressed(VirtualButtonAbstractBehaviour vb)
     {
-        Debug.Log("Pressed");
         sound.Play();
         glare.SetActive(true);
     }
