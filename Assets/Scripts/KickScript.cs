@@ -20,6 +20,7 @@ public class KickScript : MonoBehaviour, IVirtualButtonEventHandler {
 
     public void OnButtonPressed(VirtualButtonAbstractBehaviour vb)
     {
+        button.SetActive(false);
         playing = !playing;
         button.GetComponent<Renderer>().material.SetColor("_Color",
             playing ? new Color(.23f, .7f, .11f) : new Color(.5f, .7f, .5f));
@@ -28,6 +29,7 @@ public class KickScript : MonoBehaviour, IVirtualButtonEventHandler {
 
     public void OnButtonReleased(VirtualButtonAbstractBehaviour vb)
     {
+        button.SetActive(true);
     }
 
 }

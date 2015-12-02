@@ -13,24 +13,29 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
     private float timer, kickTimer, delay;
     private GameObject button, metronome;
     private int counter, kickCounter, superCounter;
-    private bool metronomeActive;
-    private bool playing, kickActive;
+    private bool metronomeActive, kickActive;
+    public bool playing { get; private set; }
 
     void Start() {
         delay = .26f;
         GetComponent<VirtualButtonBehaviour>().RegisterEventHandler(this);
-        counter = 3;
         metronome = transform.Find("Metronome").gameObject;
         button = transform.Find("Button").gameObject;
 
-        song.PlayDelayed(songTimer);
-        timer = songTimer + delay;
-        kickTimer = frequency * 40; //enough
+        Init();
+        metronomeActive = true;
+        kickActive = true;
+    }
+
+    void Init()
+    {
+        counter = 3;
+        kickTimer = timer = float.MaxValue;
         kickCounter = 0;
         superCounter = 0;
-        metronomeActive = true;
-        playing = true;
-        kickActive = true;
+        playing = false;
+        for (int i = 0; i < 4; ++i)
+            lights[i].SetActive(false);
     }
 
     void FixedUpdate() {
@@ -59,14 +64,16 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
                 kick.Play();
             switch (kickCounter)
             {
-                case 0:
-                case 2: kickTimer += frequency * .475f; break;
-                case 1: kickTimer += frequency * .9f; break;
-                case 3: kickTimer += frequency * 1.17f; break;
+                case 0: kickTimer += frequency * .47f; break;
+                case 1: kickTimer += frequency * 1.03f; break;
+                case 2: kickTimer += frequency * .49f; break;
+                case 3: kickTimer += frequency * 1.01f; break;
                 case 4: kickTimer += frequency; break;
             }
             ++kickCounter;
         }
+        if (!song.isPlaying && playing)
+            Init();
     }
 
     void Update()
@@ -78,21 +85,31 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
     {
         metronomeActive = !metronomeActive;
         metronome.SetActive(metronomeActive);
+        button.SetActive(false);
         button.GetComponent<Renderer>().material.SetColor("_Color",
             metronomeActive ? new Color(.23f, .7f, .11f) : new Color(.5f, .7f, .5f));
     }
 
     public void OnButtonReleased(VirtualButtonAbstractBehaviour vb)
     {
+        button.SetActive(true);
     }
 
     public void TogglePlay()
     {
         playing = !playing;
         if (playing)
+        {
+            if (!song.isPlaying)
+            {
+                song.Play();
+                timer = delay;
+            }
             song.UnPause();
-        else
+        } else
+        {
             song.Pause();
+        }
     }
 
     public void ToogleKick()
@@ -110,7 +127,7 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         superCounter = 9;
         if (point == 0)
         {
-            kickTimer = frequency * 40; //enough
+            kickTimer = float.MaxValue;
             superCounter = 0;
         }
     }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Vuforia;
 
-public class StartScript : MonoBehaviour, IVirtualButtonEventHandler {
+public class SongPointScript : MonoBehaviour, IVirtualButtonEventHandler {
 
     public int point;
     public GameObject button;

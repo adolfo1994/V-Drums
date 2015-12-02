@@ -8,10 +8,8 @@ public class ControlPauseScript : MonoBehaviour, IVirtualButtonEventHandler {
     private MetronomeScript metronome;
     private GameObject button;
     private SpriteRenderer buttonIcon;
-    private bool playing;
 
     void Start () {
-        playing = true;
         GetComponent<VirtualButtonBehaviour>().RegisterEventHandler(this);
         button = transform.FindChild("Button").gameObject;
         buttonIcon = button.GetComponentInChildren<SpriteRenderer>();
@@ -20,22 +18,27 @@ public class ControlPauseScript : MonoBehaviour, IVirtualButtonEventHandler {
 	
     public void OnButtonPressed(VirtualButtonAbstractBehaviour vb)
     {
+        button.SetActive(false);
         metronome.TogglePlay();
-        playing = !playing;
+    }
+
+    public void Update ()
+    {
         Material material = button.GetComponent<Renderer>().material;
-        if (playing)
+        if (metronome.playing)
         {
-            buttonIcon.sprite = play;
+            buttonIcon.sprite = pause;
             material.SetColor("_Color", new Color(.23f, .7f, .11f));
         }
         else
         {
-            buttonIcon.sprite = pause;
+            buttonIcon.sprite = play;
             material.SetColor("_Color", new Color(.5f, .7f, .5f));
         }
     }
 
     public void OnButtonReleased(VirtualButtonAbstractBehaviour vb)
     {
+        button.SetActive(true);
     }
 }
