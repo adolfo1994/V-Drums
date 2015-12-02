@@ -20,6 +20,7 @@ public class MenuItemScript: MonoBehaviour {
 	private float delay = 0.0f; 
 	private Transform buttonText;
 	private GameObject song;
+    private UIScript ui;
 
 	
 	void Start() {
@@ -29,8 +30,7 @@ public class MenuItemScript: MonoBehaviour {
 		buttonText.gameObject.SetActive (false);
 		song = GameObject.FindWithTag("Song");
 		metronome = FindObjectOfType<MetronomeScript>();
-
-		
+		ui = FindObjectOfType<UIScript>();
 	}
 	
 	void Update() {
@@ -48,11 +48,14 @@ public class MenuItemScript: MonoBehaviour {
 						if (!metronome.playing){
 							metronome.TogglePlay();
 						}
+                        ui.SendInstructions("Clocks - Coldplay");
 						break;
 					case ButtonType.restart:
                         pauseMenu.SetActive(false);
                         metronome.Init();
+                        metronome.TogglePlay();
                         drums.SetActive(true);
+                        ui.SendInstructions("Clocks - Coldplay");
 						break;
 					case ButtonType.song:
 						break;
