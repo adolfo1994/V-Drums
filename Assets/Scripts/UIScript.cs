@@ -4,6 +4,7 @@ using System.Collections;
 public class UIScript : MonoBehaviour {
 
 	public GameObject pauseMenu;
+    public GameObject drums;
 
 	private bool showingMenu;
 	private CardboardHead head;
@@ -22,14 +23,15 @@ public class UIScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Cardboard.SDK.Triggered) {
-				if(metronome.playing){
-					metronome.TogglePlay();
-				}
-				pauseMenu.transform.SetParent(null);
-				pauseMenu.SetActive(true);
-				showingMenu = true;
-				Debug.Log ("Setting active false");
+		if (Cardboard.SDK.Triggered && !pauseMenu.activeSelf) {
+            if (metronome.playing){
+                metronome.TogglePlay();
+            }
+            drums.SetActive(false);
+            pauseMenu.transform.SetParent(null);
+            pauseMenu.SetActive(true);
+            showingMenu = true;
+            Debug.Log ("Setting active false");
 		}
 	}
 }

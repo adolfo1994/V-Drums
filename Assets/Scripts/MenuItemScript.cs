@@ -11,6 +11,7 @@ public class MenuItemScript: MonoBehaviour {
 	public Material activeMaterial;
 	public ButtonType buttonType;
 	public GameObject pauseMenu;
+    public GameObject drums;
 
 	private MetronomeScript metronome;
 	private Transform originalParent;
@@ -42,12 +43,16 @@ public class MenuItemScript: MonoBehaviour {
 				switch(buttonType){
 					case ButtonType.play:
 						pauseMenu.SetActive(false);
-						pauseMenu.transform.SetParent(originalParent);
-						if(metronome.playing){
+						//pauseMenu.transform.SetParent(originalParent);
+                        drums.SetActive(true);
+						if (!metronome.playing){
 							metronome.TogglePlay();
 						}
 						break;
 					case ButtonType.restart:
+                        pauseMenu.SetActive(false);
+                        metronome.Init();
+                        drums.SetActive(true);
 						break;
 					case ButtonType.song:
 						break;

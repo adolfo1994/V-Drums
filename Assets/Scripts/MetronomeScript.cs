@@ -12,7 +12,7 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
 
     private float timer, kickTimer, delay;
     private GameObject button, metronome;
-    private int counter, kickCounter, superCounter;
+    private int counter, kickCounter, superCounter, songPoint;
     private bool metronomeActive, kickActive;
     public bool playing { get; private set; }
 
@@ -27,7 +27,7 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         kickActive = true;
     }
 
-    void Init()
+    public void Init()
     {
         counter = 3;
         kickTimer = timer = float.MaxValue;
@@ -36,6 +36,7 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
         playing = false;
         for (int i = 0; i < 4; ++i)
             lights[i].SetActive(false);
+        song.time = frequency * songPoint * 4 * quarters;
     }
 
     void FixedUpdate() {
@@ -119,6 +120,7 @@ public class MetronomeScript : MonoBehaviour, IVirtualButtonEventHandler {
 
     public void SetStart(int point)
     {
+        songPoint = point;
         song.time = frequency * point * 4 * quarters;
         timer = delay;
         counter = 3;
