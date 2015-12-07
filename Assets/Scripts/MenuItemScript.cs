@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum ButtonType{
-	play,restart,song,ambient
+	play,restart,song,ambient, nextSong,previousSong
 }
 public class MenuItemScript: MonoBehaviour {
 
@@ -43,7 +43,7 @@ public class MenuItemScript: MonoBehaviour {
 				switch(buttonType){
 					case ButtonType.play:
 						pauseMenu.SetActive(false);
-						//pauseMenu.transform.SetParent(originalParent);
+						pauseMenu.transform.SetParent(originalParent);
                         drums.SetActive(true);
 						if (!metronome.playing){
 							metronome.TogglePlay();
@@ -51,6 +51,7 @@ public class MenuItemScript: MonoBehaviour {
                         ui.SendInstructions("Clocks - Coldplay");
 						break;
 					case ButtonType.restart:
+						pauseMenu.transform.SetParent(originalParent);
                         pauseMenu.SetActive(false);
                         metronome.Init();
                         metronome.TogglePlay();
@@ -58,6 +59,12 @@ public class MenuItemScript: MonoBehaviour {
                         ui.SendInstructions("Clocks - Coldplay");
 						break;
 					case ButtonType.song:
+						break;
+					case ButtonType.previousSong:
+						ui.SendInstructions("No hay mas canciones disponibles");
+						break;
+					case ButtonType.nextSong:
+						ui.SendInstructions("No hay mas canciones disponibles");
 						break;
 					case ButtonType.ambient:
 						break;
