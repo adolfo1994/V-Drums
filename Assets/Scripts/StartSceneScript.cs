@@ -6,7 +6,7 @@ public class StartSceneScript : MonoBehaviour {
     float timer;
 
 	void Start () {
-        timer = 2;
+        timer = 3;
 	}
 	
 	void Update () {
