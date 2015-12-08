@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class UIScript : MonoBehaviour {
 
 	public GameObject pauseMenu;
     public GameObject drums;
-    public TextMesh instructions;
+    public GameObject instructions;
 
 	private CardboardHead head;
 	private GameObject song;
@@ -26,7 +25,7 @@ public class UIScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Cardboard.SDK.Triggered && !pauseMenu.activeSelf) {
-            SendInstructions("Gira tu cabeza para seleccionar");
+            SendInstructions("Gira para seleccionar");
             if (metronome.playing){
                 metronome.TogglePlay();
             }
@@ -39,13 +38,14 @@ public class UIScript : MonoBehaviour {
         {
             instructionsTimer -= Time.deltaTime;
             if (instructionsTimer <= 0)
-                instructions.text = "";
+                instructions.SetActive(false);
         }
 	}
 
-    public void SendInstructions (string text, float time = 4)
+    public void SendInstructions (string text, float time = 5)
     {
-        instructions.text = text;
+        instructions.SetActive(true);
+        instructions.GetComponentInChildren<TextMesh>().text = text;
         instructionsTimer = time;
     }
 }

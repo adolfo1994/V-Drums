@@ -61,16 +61,15 @@ public class MenuItemScript: MonoBehaviour {
 					case ButtonType.song:
 						break;
 					case ButtonType.previousSong:
-						ui.SendInstructions("No hay mas canciones disponibles");
+						ui.SendInstructions("No hay más canciones\ndisponibles");
 						break;
 					case ButtonType.nextSong:
-						ui.SendInstructions("No hay mas canciones disponibles");
+						ui.SendInstructions("No hay más canciones\ndisponibles");
 						break;
 					case ButtonType.ambient:
 						break;
 				}
 			}
-			Debug.Log("Looked");
 			GetComponent<Renderer>().material = activeMaterial; 
 			transform.localScale.Set(3.2f, 3.2f, 1);
 
