@@ -12,7 +12,7 @@ public class TeachScript : MonoBehaviour, IVirtualButtonEventHandler {
         metronome = FindObjectOfType<MetronomeScript>();
         button = transform.FindChild("Button").gameObject;
         
-        playing = true;
+        playing = false;
     }
 
     void FixedUpdate () {
@@ -22,6 +22,8 @@ public class TeachScript : MonoBehaviour, IVirtualButtonEventHandler {
     {
         button.SetActive(false);
         playing = !playing;
+		Debug.Log("PRESSED");
+		GameObject.FindGameObjectWithTag ("Drums").GetComponent<TutorialScript> ().tutorialActive = playing;
         button.GetComponent<Renderer>().material.SetColor("_Color",
             playing ? new Color(.23f, .7f, .11f) : new Color(.5f, .7f, .5f));
     }
